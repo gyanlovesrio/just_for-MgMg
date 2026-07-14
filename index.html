@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Favorite Person</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300;400;500;600&display=swap');
+
+        body {
+            background-color: #fff5f5;
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            color: #553c3c;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 90%;
+            background: white;
+            padding: 35px 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(254, 180, 180, 0.3);
+            border: 1px solid #ffe3e3;
+            transition: all 0.5s ease;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            color: #d85c5c;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            margin-top: 10px;
+        }
+
+        p {
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        .hidden { display: none !important; }
+
+        /* Sticker & Video Style */
+        .sticker, .sticker-video {
+            width: 140px;
+            height: 140px;
+            margin: 10px auto 20px auto;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* Buttons styles */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            height: 70px;
+            position: relative;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .primary-btn {
+            background-color: #ff8a8a;
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 138, 138, 0.4);
+        }
+
+        .secondary-btn {
+            background-color: #f0ebeb;
+            color: #615a5a;
+        }
+
+        /* Positions for Interactive Buttons */
+        .btn-static {
+            position: absolute;
+            left: 10%;
+        }
+
+        .btn-run {
+            position: absolute;
+            left: 52%;
+            transition: all 0.15s ease-out;
+        }
+
+        /* Section 2: Jar & Reasons Styles */
+        .jar-container {
+            font-size: 5rem;
+            cursor: pointer;
+            margin: 20px 0;
+            transition: transform 0.3s;
+            display: inline-block;
+        }
+        .jar-container:hover { transform: scale(1.1); }
+
+        .reasons-list {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .reason-card {
+            background-color: #fff9f9;
+            border-left: 4px solid #ff8a8a;
+            padding: 12px 15px;
+            margin: 12px 0;
+            border-radius: 0 10px 10px 0;
+            font-weight: 500;
+            font-size: 0.95rem;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s ease;
+        }
+        .reason-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Section 3: Envelope Styles */
+        .envelope-wrapper {
+            margin: 40px auto 20px auto;
+            cursor: pointer;
+            position: relative;
+            width: 150px;
+            height: 100px;
+            background-color: #f4b2b2;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .envelope-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 75px solid transparent;
+            border-right: 75px solid transparent;
+            border-top: 55px solid #ffcdcd;
+            transform-origin: top;
+            transition: transform 0.4s ease;
+            z-index: 3;
+        }
+        .envelope-wrapper.open::before {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+        .envelope-inner {
+            font-size: 2.5rem;
+            line-height: 100px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .letter-content {
+            text-align: left;
+            white-space: pre-line;
+            line-height: 1.8;
+            font-size: 1rem;
+            background: #fffdfd;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px dashed #ffd1d1;
+            margin-top: 30px;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        /* Heart Rain */
+        .heart-rain {
+            position: fixed;
+            top: -10%;
+            pointer-events: none;
+            animation: fall 3s linear infinite;
+            color: #ff8a8a;
+            z-index: 999;
+        }
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="bg-music.mp3" type="audio/mp3">
+    </audio>
+
+    <div class="container" id="quizPage1">
+        <h1>Hi, my baby.</h1>
+        
+        <video class="sticker-video" autoplay loop muted playsinline>
+            <source src="welcome.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+        <p>I have a few questions for you before you read this...</p>
+        <div class="btn-container">
+            <button class="primary-btn" onclick="nextPage(1, 2)">Start</button>
+        </div>
+    </div>
+
+    <div class="container hidden" id="quizPage2">
+        <h1>Question 1</h1>
+        <img class="sticker" src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExajM4bmVpeTN5NHQ1ZXlhZTNtNjcxMnZhbWFubDcxYXVyYWh4N2pyNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/b38S8p0pWpC6vK3gT6/giphy.gif" alt="Bubu Dudu Q1">
+        <p style="font-weight: 500; font-size: 1.2rem;">ဒီနေ့ ဘယ်သူ့ကို အလွမ်းဆုံးလဲ?</p>
+        <div class="btn-container">
+            <button id="q1StaticBtn" class="primary-btn btn-static" onclick="nextPage(2, 3)">မမကိုပေါ့</button>
+            <button id="q1RunBtn" class="secondary-btn btn-run" onmouseover="avoidBtn('q1RunBtn', '#quizPage2')" ontouchstart="avoidBtn('q1RunBtn', '#quizPage2')">ပြောပြဘူး ဟွန့်</button>
+        </div>
+    </div>
+
+    <div class="container hidden" id="quizPage3">
+        <h1>Question 2</h1>
+        <img class="sticker" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZXk4ZmsyN3Zjc3gxbGFlNHBhN2oxbzUxaXR1dzQ5MnY5MG81bjF3YSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/L97H4S4X9JtHsczIep/giphy.gif" alt="Bubu Dudu Q2">
+        <p style="font-weight: 500; font-size: 1.15rem;">မောင့်ရဲ့မမက ဂျီကျပြီး ဆိုးတတ်ပေမယ့် မောင့်ကိုအများကြီးချစ်တာ သိတယ်မို့လား?</p>
+        <div class="btn-container">
+            <button id="q2StaticBtn" class="primary-btn btn-static" onclick="nextPage(3, 4)">သိပါတယ် မမ</button>
+            <button id="q2RunBtn" class="secondary-btn btn-run" onmouseover="avoidBtn('q2RunBtn', '#quizPage3')" ontouchstart="avoidBtn('q2RunBtn', '#quizPage3')">သိဘူးးးဗျ</button>
+        </div>
+    </div>
+
+    <div class="container hidden" id="quizPage4">
+        <h1>Question 3</h1>
+        <img class="sticker" id="q3Sticker" src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMnYyeTByZ3p1OHo1ODlyd3AwcHNqNXQ1ZWF0MDlzOWp6aHN3cmN3YSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/Gwh968fFfS62WpC9fM/giphy.gif" alt="Bubu Dudu Q3">
+        <p style="font-weight: 500; font-size: 1.25rem; color: #d85c5c;">ဖြစ်ခဲ့တဲ့ကိစ္စတွေအတွက် မမကိုခွင့်လွှတ်ပေးမလား?</p>
+        <div class="btn-container">
+            <button id="yesBtn" class="primary-btn btn-static" onclick="startSection2()">Yes, I do.</button>
+            <button id="noBtn" class="secondary-btn btn-run" onmouseover="avoidBtn('noBtn', '#quizPage4')" ontouchstart="avoidBtn('noBtn', '#quizPage4')">No 🙄</button>
+        </div>
+    </div>
+
+
+    <div class="container hidden" id="section2">
+        <h1 style="color: #ff8a8a;">Thank You Baby</h1>
+        <img class="sticker" src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMjRxOWg0MGZpNzN3MGg4cmR0dDV1Y3cxaGg2Nm0ybXpxczlzbWRyMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/93G6O7T7s9IetH9n6S/giphy.gif" alt="Bubu Dudu Thank You">
+        <p>ခွင့်လွှတ်ပေးလို့ ကျေးဇူးတင်ပါတယ် အချစ်ကလေး</p>
+        
+        <div class="jar-container" id="loveJar" onclick="revealReason()">🫙</div>
+        <p style="font-size: 0.85rem; color: #998888;" id="jarHint">ပုလင်းလေးကို နှိပ်ပြီး စာကတ်လေးတွေ ထုတ်ကြည့်ပေးပါ (ကျန်ရှိဖတ်ရန် - <span id="countText">5</span> ကြိမ်)</p>
+
+        <div class="reasons-list">
+            <div class="reason-card" id="card1">✨ မမ အပေါ်အမြဲစိတ်ရှည်ပေးတဲ့ မောင်"</div>
+            <div class="reason-card" id="card2">✨ မမကို သည်းခံပေးတဲ့ မောင်"</div>
+            <div class="reason-card" id="card3">✨ မမ နားလည်ရခက်တဲ့အချိန်မှာတောင် လက်မလွှတ်ဘဲ ကြင်နာပေးဆဲဖြစ်တဲ့ မောင်"</div>
+            <div class="reason-card" id="card4">✨ မမ အတွက်ဆိုအမြဲစဉ်းစားပြီး စိတ်ပူတတ်တဲ့ မောင်"</div>
+            <div class="reason-card" id="card5">✨ အခက်ခဲတားဆီးတွေရှိတာတောင် ပစ်မထားခဲ့တဲ့သူလေး သိပ်ချစ်တယ် မောင်"</div>
+        </div>
+
+        <div class="btn-container hidden" id="readLetterBtnContainer" style="margin-top: 20px; display: flex; justify-content: center; height: auto;">
+            <button class="primary-btn" onclick="startSection3()" style="position: static;">Read My Full Heart</button>
+        </div>
+    </div>
+
+
+    <div class="container hidden" id="section3">
+        <h1>For My Favorite Person</h1>
+        <img class="sticker" id="finalSticker" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExMWNpa3pnb3lpeGszMGphNWMyazB3MTc4YW8xaHBtZmNrd29vd3JqcyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/jY8Kj0iNfFfIclD6iK/giphy.gif" alt="Bubu Dudu Final">
+        <p id="envelopeHint" style="margin-top: 15px; font-weight: 500; color: #d85c5c;">မင်းအတွက် ရင်ဖွင့်လွှာလေး</p>
+
+        <div class="envelope-wrapper" id="envelope" onclick="openEnvelope()">
+            <div class="envelope-inner">❤️</div>
+        </div>
+
+        <div class="letter-content hidden" id="fullLetter">
+<strong>To My Favorite Person 🤍</strong>
+
+Hi, my baby.
+
+If you're reading this, thank you for taking the time to open it.
+
+I've been thinking a lot about us, and I realized something. I don't start arguments because I want to hurt you. Sometimes I let my emotions speak before my heart does, and by the time I realize it, I've already made you feel hurt. I'm truly sorry.
+
+You have always been patient with me, even when I'm difficult to understand. Thank you for choosing kindness instead of giving up on me. I know I don't say it enough, but I notice every little thing you do for us.
+
+These past few days have been harder because I haven't been able to see you. I miss you more than I can explain, and sometimes that loneliness turns into overthinking. That's not your fault, and I don't want it to become a burden for you.
+
+I'm not writing this because I want to prove that I'm right. I'm writing this because I love you, and I don't want us to keep hurting each other over misunderstandings.
+
+I promise I'll keep working on myself. I want to become someone who makes you feel safe, understood, and loved—not someone who makes you feel exhausted.
+
+Thank you for staying with me.
+Thank you for loving me.
+And thank you for believing in us, even when things aren't perfect.
+
+If you'll still hold my hand, I'll keep choosing you every single day.
+
+I love you so much, baby.
+
+<strong>Forever yours, Your girl. 🤍 🌷</strong>
+        </div>
+    </div>
+
+    <script {nonce}>
+        let currentReason = 1;
+
+        // Page navigation for Section 1
+        function nextPage(current, next) {
+            document.getElementById(`quizPage${current}`).classList.add('hidden');
+            document.getElementById(`quizPage${next}`).classList.remove('hidden');
+        }
+
+        // Running away logic for buttons inside their specific container
+        function avoidBtn(btnId, containerId) {
+            const btn = document.getElementById(btnId);
+            const container = document.querySelector(containerId);
+            const rect = container.getBoundingClientRect();
+            
+            // Limit bounds inside the white container
+            const maxX = rect.width - btn.offsetWidth - 30;
+            const maxY = rect.height - btn.offsetHeight - 90;
+            
+            const randomX = Math.max(15, Math.random() * maxX);
+            const randomY = Math.max(15, Math.random() * maxY);
+            
+            btn.style.position = 'absolute';
+            btn.style.left = randomX + 'px';
+            btn.style.top = randomY + 'px';
+
+            // Easter egg response stickers when trying to click No/Nope
+            if (btnId === 'noBtn') {
+                document.getElementById('q3Sticker').src = "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNnk1bDBmNWw2dzdrMmhuZHY5YnV0b3BsdmF1enJtcmxhZXQxNWJ1NCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/vL0S39n8668U915y1S/giphy.gif";
+            }
+        }
+
+        // Start Section 2 (Jar section)
+        function startSection2() {
+            document.getElementById('quizPage4').classList.add('hidden');
+            document.getElementById('section2').classList.remove('hidden');
+            
+            // Play Music
+            const music = document.getElementById('bgMusic');
+            music.play().catch(e => console.log("Audio waiting for interaction"));
+
+            // Start Heart Rain
+            setInterval(createHeart, 300);
+        }
+
+        // Reveal Reasons one by one from Jar
+        function revealReason() {
+            if (currentReason <= 5) {
+                const card = document.getElementById(`card${currentReason}`);
+                card.classList.add('show');
+                
+                // Shake effect on Jar
+                const jar = document.getElementById('loveJar');
+                jar.style.transform = 'skewX(-15deg)';
+                setTimeout(() => jar.style.transform = 'skewX(0deg)', 200);
+
+                currentReason++;
+                let remaining = 6 - currentReason;
+                document.getElementById('countText').innerText = remaining;
+
+                if (remaining === 0) {
+                    document.getElementById('jarHint').classList.add('hidden');
+                    document.getElementById('readLetterBtnContainer').classList.remove('hidden');
+                }
+            }
+        }
+
+        // Start Section 3 (Envelope section)
+        function startSection3() {
+            document.getElementById('section2').classList.add('hidden');
+            document.getElementById('section3').classList.remove('hidden');
+        }
+
+        // Open Envelope and Reveal Letter
+        function openEnvelope() {
+            const env = document.getElementById('envelope');
+            env.classList.add('open');
+            document.getElementById('envelopeHint').innerText = "ရင်ထဲကစကားလေးတွေကို ဖတ်ကြည့်ပေးပါနော်";
+            document.getElementById('finalSticker').src = "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Qzdzc2ajY4cDN2NHB0YThmbTdkajlhdWF6bjg2Ymx0Y2hzdnlqbiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/nF1S5RHi8SreXnLd6j/giphy.gif";
+            
+            setTimeout(() => {
+                document.getElementById('fullLetter').classList.remove('hidden');
+                document.getElementById('fullLetter').scrollIntoView({ behavior: 'smooth' });
+            }, 400);
+        }
+
+        // Heart Rain effect
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart-rain');
+            heart.innerText = '💖';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+            heart.style.fontSize = Math.random() * 20 + 15 + 'px';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+    </script>
+</body>
+  </html>
+              
